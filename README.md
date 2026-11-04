@@ -12,9 +12,9 @@ It is a `SKILL.md` plus templates, written for Claude Code (subagent roles, work
 |---|---|---|
 | 1. Plan | one Opus agent | `qa/README.md`, `qa/<area>/checks.md` |
 | 2. Workspace | orchestrator | `qa/<area>/bed/` (driver, `mkbed.py`, beds) |
-| 3. Run | one Sonnet/Haiku tester per area; Opus advisor via the orchestrator, rarely | ticked checks, `bugs.md` |
+| 3. Run | one Haiku tester per area; Sonnet orchestrator; Opus advisor, rarely | ticked checks, `bugs.md` |
 | 4. Consolidate | orchestrator | `qa/BUGS.md` by severity |
-| 5. Verify | narrow cheap verifiers, then one Sonnet reviewer | confirmed / not a bug / by design |
+| 5. Verify | narrow Haiku verifiers, then one Sonnet reviewer | confirmed / not a bug / by design |
 | 6. Fix (optional) | Sonnet splits bugs into parallel blocks; Haiku fixes each; Sonnet reviews each block | `qa/FIXPLAN.md`, patches |
 | 7. Archive | orchestrator | keep text and scripts, trash beds and binaries |
 

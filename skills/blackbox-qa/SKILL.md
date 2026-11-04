@@ -28,12 +28,11 @@ likely on real projects or loses data. Omit cases the unit tests already cover.
 - `qa/README.md` holds the ground rules, the bug format ([templates/bug.md](templates/bug.md)) and a per-area Status list. Ground rules apply to every case (e.g. "expected" always includes no absolute-path leaks, no raw stack
   traces, tool still responsive afterwards).
 
-## 3. Run the testers (Sonnet or Haiku, one area each)
+## 3. Run the testers (Haiku, one area each)
 
-Launch one cheap agent per area with [templates/tester-brief.md](templates/tester-brief.md). They tick each case
-(`PASS` / `FAIL (BUG-<AREA>-nnn)` / `SKIP` with reason) and file bugs in `bugs.md`. They may message you with a question (if the harness supports it); answer
-from the docs. For a genuinely hard, narrow question, ask an Opus **advisor** a precise one-paragraph question and relay
-the answer. Do this rarely (a few times per campaign); testers must not call Opus themselves.
+Launch one Haiku agent per area with [templates/tester-brief.md](templates/tester-brief.md). They tick each case
+(`PASS` / `FAIL (BUG-<AREA>-nnn)` / `SKIP` with reason) and file bugs in `bugs.md`. They may message you with small questions (setup, how a tool works, is this a bug); answer
+from the docs. If you can't, ask an Opus **advisor** a precise one-paragraph question and relay the answer. Do this rarely (a few times per campaign); testers must not call Opus themselves.
 Run areas in parallel only if they don't share ports, files or a bed.
 
 ## 4. Consolidate
@@ -43,7 +42,7 @@ the Status list in `qa/README.md` per area (cases, PASS/FAIL/SKIP counts, bug id
 
 ## 5. Verify the bugs (second pass)
 
-For every bug (batch small ones per area), spawn a cheap agent with one narrow thing to confirm or refute
+For every bug (batch small ones per area), spawn a Haiku agent with one narrow thing to confirm or refute
 ([templates/verifier-brief.md](templates/verifier-brief.md)): exact repro, expected vs actual, "is this by design?".
 Then one **Sonnet reviewer** reads all verifier reports plus the original entries and rules each bug CONFIRMED /
 NOT A BUG / BY DESIGN / DUPLICATE, with severity. Update `BUGS.md`. Decisions about intended behaviour that need the
@@ -67,9 +66,14 @@ owner's judgment go to the user, not to an agent.
 Keep checks, bugs, plans, patches, drivers and the bed script; delete `beds/`, copied binaries and big logs recoverably
 (e.g. `trash`; `du -sh qa/*/bed/* | sort -h | tail` shows what weighs most). Note in `qa/README.md` how to rebuild.
 
+## Models
+
+Defaults, chosen for cost: Opus plans the checklist and advises; Haiku tests, verifies and fixes; Sonnet orchestrates,
+plans fix blocks and reviews. The user may swap Haiku for Sonnet for testers or fixers (e.g. on subtle or large areas);
+reviewers stay a tier above the agents they review.
+
 ## Rules
 
 - Testers never edit the tool's source; fixers never edit `qa/` checklists.
 - Never push, publish or hit the network unless the campaign needs it.
 - A bug is not "confirmed" on one agent's word: step 5 comes before fixing.
-- Opus only plans the checklist and advises; Sonnet/Haiku do everything else.
