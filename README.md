@@ -29,13 +29,13 @@ Copy `skills/blackbox-qa/` into the skills directory for your agent, for example
 
 ## Requirements and limits
 
-The workflow assumes an agent environment able to delegate to subagents and use git worktrees, with access to the tool and suitable example projects. Its model defaults name Claude model tiers; availability, cost, and delegation capabilities depend on the host. Campaigns can be resource-intensive. Fixes are optional and require a user request; intended-behavior decisions go to the user.
+The workflow assumes an agent environment able to delegate to subagents, with access to the tool and suitable example projects. Its model defaults name Claude model tiers; availability, cost, and delegation capabilities depend on the host. Parallel fixes also require git worktrees. Campaigns can be resource-intensive. Fixes are optional and require a user request; intended-behavior decisions go to the user.
 
 ## Evaluation
 
-<img src="assets/evaluation.svg" alt="SkillEvaluator static quality B, 84.8 out of 100; security scan incomplete" width="920">
+<img src="assets/evaluation.svg" alt="SkillEvaluator static quality A, 100 out of 100; security checks passed" width="920">
 
-NVIDIA SkillEvaluator 1.2.0 scored the skill **B, 84.8/100** on its static quality checks on 2026-11-25. Its security scan was incomplete, so this is not a complete security assessment. No live agent evaluation was run. See [evaluation details](docs/evaluation.md).
+NVIDIA SkillEvaluator 1.2.0 scored the skill **A, 100/100** on its static quality checks on 2026-11-25. SkillSpector and Gitleaks checks passed; these static checks are not a complete security assessment. No live agent evaluation was run. See [evaluation details](docs/evaluation.md).
 
 ## Tests
 
