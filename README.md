@@ -1,47 +1,49 @@
-# blackbox-qa-skill
+<p align="center"><img src="assets/icon.png" alt="Black-box QA icon: a magnifying glass examining a cube" width="96"></p>
 
-An [Agent Skill](https://agentskills.io) that runs a large black-box QA campaign against a built tool (MCP server, CLI,
-library) on real example projects, using many agents with clear roles to keep cost and noise down. It encodes the
-workflow used to QA `codenav-go-mcp`: ~20 areas, hundreds of cases, dozens of confirmed bugs.
+# Black-box QA
 
-It is a `SKILL.md` plus templates, written for Claude Code (subagent roles, worktrees) and adaptable to other agents that load skills.
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
+An [Agent Skill](https://agentskills.io) for planning and running a multi-agent black-box QA campaign against a built server, CLI, or library using real example projects. It organizes checks, bug reports, independent verification, and optional fixes.
 
 ## How it works
 
-| Step | Who | Output |
-|---|---|---|
-| 1. Plan | one Opus agent | `qa/README.md`, `qa/<area>/checks.md` |
-| 2. Workspace | orchestrator | `qa/<area>/bed/` (driver, `mkbed.py`, beds) |
-| 3. Run | one Haiku tester per area; Sonnet orchestrator; Opus advisor, rarely | ticked checks, `bugs.md` |
-| 4. Consolidate | orchestrator | `qa/BUGS.md` by severity |
-| 5. Verify | narrow Haiku verifiers, then one Sonnet reviewer | confirmed / not a bug / by design |
-| 6. Fix (optional) | Sonnet splits bugs into parallel blocks; Haiku fixes each; Sonnet reviews each block | `qa/FIXPLAN.md`, patches |
-| 7. Archive | orchestrator | keep text and scripts, trash beds and binaries |
+<img src="assets/workflow.png" alt="Campaign workflow: plan checks, build test beds, run testers, consolidate reports, verify bugs, optionally fix them, and archive the workspace" height="350">
 
-## Install
+A planning agent creates area checklists; testers run them against reproducible test beds. Reports are deduplicated and independently verified before any requested fixes. The workspace keeps the checks, reports, drivers, and scripts needed to reproduce the campaign.
 
-### Any agent: the `skills` CLI
+## Quick start
 
 ```bash
 npx skills add illescasDaniel/blackbox-qa-skill
 ```
 
-It asks which agents to install for and whether to install into the current project or globally. Non-interactive:
-`npx skills add illescasDaniel/blackbox-qa-skill -a claude-code -y`, plus `-g` for global.
+Ask your agent to “QA this CLI on real projects” or “verify the reported bugs.” The skills CLI can install the skill for a supported agent and scope you select.
 
-### By hand
+<details>
+<summary>Manual installation</summary>
 
-Copy the `skills/blackbox-qa` folder into your agent's skills directory.
+Copy `skills/blackbox-qa/` into the skills directory for your agent, for example `.claude/skills/blackbox-qa/` for a Claude Code project or `~/.agents/skills/blackbox-qa/` for Codex globally.
 
-| | Project (shared with your team) | All your projects |
-|---|---|---|
-| Claude Code | `.claude/skills/blackbox-qa/` | `~/.claude/skills/blackbox-qa/` |
-| Cursor | `.cursor/skills/blackbox-qa/` | `~/.cursor/skills/blackbox-qa/` |
+</details>
+
+## Requirements and limits
+
+The workflow assumes an agent environment able to delegate to subagents and use git worktrees, with access to the tool and suitable example projects. Its model defaults name Claude model tiers; availability, cost, and delegation capabilities depend on the host. Campaigns can be resource-intensive. Fixes are optional and require a user request; intended-behavior decisions go to the user.
+
+## Evaluation
+
+<img src="assets/evaluation.svg" alt="SkillEvaluator static quality B, 84.8 out of 100; security scan incomplete" width="920">
+
+NVIDIA SkillEvaluator 1.2.0 scored the skill **B, 84.8/100** on its static quality checks on 2026-11-25. Its security scan was incomplete, so this is not a complete security assessment. No live agent evaluation was run. See [evaluation details](docs/evaluation.md).
+
+## Tests
+
+The repository contains instructions and templates rather than executable scripts. There are no automated script tests; actual agent behavior and campaign outcomes remain untested for this revision.
 
 ## Contributing
 
-Issues and pull requests are welcome. The skill is deliberately short: if a change makes `SKILL.md` longer, it should
-earn it.
+Issues and pull requests are welcome. Keep the skill focused and its instructions concise.
 
 ## License
 
