@@ -10,7 +10,7 @@ An [Agent Skill](https://agentskills.io) for planning and running a multi-agent 
 
 <img src="assets/workflow.png" alt="Campaign workflow: plan checks, build test beds, run testers, consolidate reports, verify bugs, optionally fix them, and archive the workspace" height="350">
 
-A planning agent creates area checklists; testers run them against reproducible test beds. Reports are deduplicated and independently verified before any requested fixes. The workspace keeps the checks, reports, drivers, and scripts needed to reproduce the campaign.
+A planning agent creates area checklists; testers run them against reproducible test beds. Reports are deduplicated and independently verified before any requested fixes. The workspace keeps the checks, reports, drivers, and scripts needed to reproduce the campaign. The subject can be a server, a CLI or a library — the skill defines what a test bed and the observation point mean for each (for a library: real open-source projects adapted to use it, tested by an agent other than the one who adapted them).
 
 The skill also codifies a set of **context-economy practices** learned from a full campaign: campaign documents are indexes with one file per bug or fix block, every agent gets a self-contained brief instead of "read the whole doc", bugs are verified in batches rather than one agent each, evidence stays on disk and is referenced by path, and a short resume doc carries state across pauses. These exist because agents re-reading large campaign documents was the biggest resource cost of the reference campaign.
 

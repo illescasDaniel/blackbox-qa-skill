@@ -18,6 +18,27 @@ confirms every bug before anything is fixed. Orchestrate; don't test yourself.
 
 A built tool, its source and documentation, suitable example projects, git, and an agent host capable of delegation are required. Fixing in parallel also requires git worktrees. Record the tested revision, build command and tool version in the campaign README, named README.md in the generated QA directory.
 
+## Subject types
+
+The workflow fits a server, a CLI or a library; what changes is what a bed is and where behavior is observed. Name the
+subject type in the campaign README and shape the areas around it.
+
+- **Server** (any process behind a protocol — MCP, HTTP, LSP): the bed is projects the server operates on, plus one
+  driver per area that launches the *built* server and speaks its protocol, logging every exchange to a JSONL log.
+  Test both layers: the tool surface (replies, refusals, message quality) and its side effects (files actually written,
+  state after a restart or a killed client, two clients at once). Point the driver at the built artifact, never a dev
+  checkout — a stray source-path import makes every result lie.
+- **CLI**: the bed is projects or datasets the CLI operates on. Observe the triple: stdout/stderr, exit code, and the
+  files it produced (diff them). Extra oracles: golden outputs committed with the bed, round trips (A→B then B→A),
+  and a cross-check against a second tool that does the same job. Also test piped/no-TTY runs, relative vs absolute
+  paths, a minimal environment, and the install method users actually get.
+- **Library**: the bed is real open-source projects *adapted* to use the library (path dependency or pinned local
+  build; the bed script reproduces the adaptation). The observation point is the public API: what calls return and
+  throw, error-message quality, and the type checker's verdict where the language has one. The adapted project's own
+  test suite is a free oracle: adapted correctly, it must still pass. One agent does the adaptation, a different one
+  tests — the adapter knows what it meant the code to do, the tester only sees what the library does; commit the
+  adaptation diff as part of the bed and test what it says.
+
 ## Instructions
 
 ### 1. Plan the checklist (Opus, once)
@@ -31,7 +52,8 @@ likely on real projects or loses data. Omit cases the unit tests already cover.
 ### 2. Build the workspace
 
 - Add `qa/` to `.gitignore`. Under it, create one directory per area containing checks.md, bugs.md, and a bed directory. `bed/` holds the binary, driver, mkbed.py, logs and `beds/`.
-- **Beds** = real projects to test on. Prefer offline sources (module/package cache, the language's stdlib), plus small
+- **Beds** = real projects to test on (what that means per subject type: see Subject types). Prefer offline sources
+  (module/package cache, the language's stdlib), plus small
   synthetic beds with one directory per case. Each bed is a git repo with a clean base commit; preserve the original bed unchanged. Write cases always run on
   a **throwaway copy**; reset with `git checkout -- . && git clean -fdq`.
 - A stdlib-only bed script (e.g. mkbed.py) must recreate every bed from scratch, so `beds/` and the binary can be deleted later.
