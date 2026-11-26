@@ -52,13 +52,20 @@ Run areas in parallel only if they don't share ports, files or a bed.
 Merge all bugs into the campaign-wide BUGS.md in the QA directory: dedupe first (several areas often hit the same root cause; keep per-area ids and list duplicates), then sort by severity. Update
 the Status list in the campaign README per area (cases, PASS/FAIL/SKIP counts, bug ids).
 
+**Keep BUGS.md an index, not an archive** (see Context economy): full bug/root-cause entries go in one small file each
+(e.g. `bugs/RC-001.md`), and BUGS.md keeps the summary, a one-line index table (id, severity, areas, status, title) and
+pointers. Inline evidence in an entry only as the decisive lines; keep logs and transcripts on disk and reference paths.
+
 ### 5. Verify the bugs (second pass)
 
-For every bug (batch small ones per area), spawn a Haiku agent with one narrow thing to confirm or refute
+Verify in **batches of related bugs** (same area or same suspected root cause), never one agent per bug: spawn a Haiku
+agent per batch with one narrow thing to confirm or refute
 ([templates/verifier-brief.md](templates/verifier-brief.md)): exact repro, expected vs actual, "is this by design?".
-Then one **Sonnet reviewer** reads all verifier reports plus the original entries and rules each bug CONFIRMED /
-NOT A BUG / BY DESIGN / DUPLICATE / INCONCLUSIVE, with severity. Mark unreproducible or blocked reports inconclusive rather than confirmed. Update the campaign-wide BUGS.md. Decisions about intended behaviour that need the
-owner's judgment go to the user, not to an agent.
+The verifier's prompt contains only its batch's bug entries and repro commands — it does not read the whole BUGS.md.
+Then one **Sonnet reviewer** rules each bug CONFIRMED / NOT A BUG / BY DESIGN / DUPLICATE / INCONCLUSIVE, with severity:
+it reads the verifier reports and the affected bug entries, not the full campaign record. Mark unreproducible or blocked
+reports inconclusive rather than confirmed. Update the campaign-wide BUGS.md. Decisions about intended behaviour that
+need the owner's judgment go to the user, not to an agent.
 
 ### 6. Fix (only if asked)
 
@@ -66,6 +73,8 @@ owner's judgment go to the user, not to an agent.
    (FIXPLAN.md in the QA directory), and writes a precise brief per block ([templates/fixer-brief.md](templates/fixer-brief.md)): bugs covered, files owned, decisions already made, ground
    rules (regression test per fix, build/lint/tests green, re-run the failing QA case). Blocks must not share files, so
    they can run in parallel. Open design questions go to the user or an Opus advisor, not to the fixers.
+   **Make each brief self-contained**: the fixer reads only its brief plus the ground-rules block — never the whole
+   BUGS.md or FIXPLAN.md. Keep FIXPLAN.md itself an index: one file per block brief, plus the map, waves and follow-ups.
 2. One **Haiku fixer per block**, in parallel, each in its own git worktree. `qa/` is gitignored, so give fixers its absolute path (read-only except the patch). Each saves a patch to
    a blockNN.patch file in the QA fixes directory and reports what it changed.
 3. After each block, a **Sonnet reviewer** checks the diff against the brief and the bugs: does it fix them, is the test
@@ -77,6 +86,31 @@ owner's judgment go to the user, not to an agent.
 
 Keep checks, bugs, plans, patches, drivers and the bed script; delete `beds/`, copied binaries and big logs recoverably
 (e.g. `trash`; `du -sh qa/*/bed/* | sort -h | tail` shows what weighs most). Note in the campaign README how to rebuild.
+
+## Context economy
+
+Lessons from a full campaign (~200 agent-runs): the biggest cost driver is not the tools or the code, it is agents
+re-reading large campaign documents. Apply these throughout; they override nothing above, they just shape how
+information is stored and handed out.
+
+- **Indexes and per-id files.** Campaign-wide docs (BUGS.md, FIXPLAN.md, the README) are indexes: summary, one-line
+  tables, pointers. Full entries live in one small file each (per root cause, per fix block). Agents open the files
+  they were pointed at, never scan the indexes end-to-end.
+- **Self-contained briefs.** Every agent prompt carries what that agent needs: its own entries, its owned files, the
+  ground-rules block, the repro command. No agent's TODO starts with "read BUGS.md".
+- **Batch verification.** One verifier per batch of related bugs (area or suspected root cause), not one per bug.
+  ~150 single-bug verifier runs cost far more than ~30 batch runs and add little accuracy.
+- **Reviewers read verdicts, not raw reports.** A reviewer gets the per-bug verdict lines plus the affected entries;
+  it does not ingest every tester's and verifier's full transcript.
+- **Evidence on disk, paths in context.** JSONL logs, diffs, bed copies and screenshots stay on disk (`qa/<area>/`,
+  a logs dir); entries inline only the decisive lines and reference the paths. Cap inlined evidence to a few lines
+  per bug.
+- **Truncate at the source.** Tail/grep logs and test output before they reach any agent; a test suite's result is
+  counts plus failing test names, not its raw output.
+- **One short resume doc.** Mid-campaign pauses get a `LEFT.md` (open items, exact pointers, what not to redo). The
+  next session reads that instead of reconstructing state from the whole record.
+- **Pristine things stay pristine.** Throwaway copies for anything destructive; never rebuild a bed just to inspect
+  it; delete scratch recoverably (`trash`), and say how to rebuild it in the README.
 
 ## Models
 

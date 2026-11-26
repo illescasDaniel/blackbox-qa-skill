@@ -12,6 +12,8 @@ An [Agent Skill](https://agentskills.io) for planning and running a multi-agent 
 
 A planning agent creates area checklists; testers run them against reproducible test beds. Reports are deduplicated and independently verified before any requested fixes. The workspace keeps the checks, reports, drivers, and scripts needed to reproduce the campaign.
 
+The skill also codifies a set of **context-economy practices** learned from a full campaign: campaign documents are indexes with one file per bug or fix block, every agent gets a self-contained brief instead of "read the whole doc", bugs are verified in batches rather than one agent each, evidence stays on disk and is referenced by path, and a short resume doc carries state across pauses. These exist because agents re-reading large campaign documents was the biggest resource cost of the reference campaign.
+
 ## Quick start
 
 ```bash
@@ -35,11 +37,11 @@ The workflow assumes an agent environment able to delegate to subagents, with ac
 
 <img src="assets/evaluation.svg" alt="SkillEvaluator static quality A, 100 out of 100; security checks passed" width="920">
 
-NVIDIA SkillEvaluator 1.2.0 scored the skill **A, 100/100** on its static quality checks on 2026-11-25. SkillSpector and Gitleaks checks passed; these static checks are not a complete security assessment. No live agent evaluation was run. See [evaluation details](docs/evaluation.md).
+NVIDIA SkillEvaluator 1.2.0 scored the skill **A, 100/100** on its static quality checks on 2026-11-25. SkillSpector and Gitleaks checks passed; these static checks are not a complete security assessment. See [evaluation details](docs/evaluation.md).
 
-## Tests
+## Field use
 
-The repository contains instructions and templates rather than executable scripts. There are no automated script tests; actual agent behavior and campaign outcomes remain untested for this revision.
+The full workflow has been exercised end-to-end once, in a multi-agent campaign against a real MCP server: hundreds of black-box checks across 23 areas, batched verification of every reported bug, and parallel fix blocks in isolated worktrees, followed by a complete re-run on the release tree. The context-economy section reflects what that campaign taught; later revisions are not field-tested yet.
 
 ## Contributing
 
