@@ -31,7 +31,7 @@ Copy `skills/blackbox-qa/` into the skills directory for your agent, for example
 
 ## Requirements and limits
 
-The workflow assumes an agent environment able to delegate to subagents, with access to the tool and suitable example projects. Its model defaults name Claude model tiers; availability, cost, and delegation capabilities depend on the host. Parallel fixes also require git worktrees. Campaigns can be resource-intensive. Fixes are optional and require a user request; intended-behavior decisions go to the user.
+The workflow assumes an agent environment able to delegate to subagents, with access to the tool and suitable example projects. The model names it mentions (Opus, Sonnet, Haiku) are shorthand for capability tiers at a certain cost point, not requirements: any host can substitute an equivalent cheap model for testers, verifiers and fixers, and a stronger one for planning and review. Parallel fixes also require git worktrees. Campaigns can be resource-intensive. Fixes are optional and require a user request; intended-behavior decisions go to the user.
 
 ## Evaluation
 

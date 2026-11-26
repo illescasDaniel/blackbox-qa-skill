@@ -115,7 +115,7 @@ information is stored and handed out.
 ## Models
 
 Defaults, chosen for cost (use available capability-equivalent agents if these models are unavailable): Opus plans the checklist and advises; Haiku tests, verifies and fixes; Sonnet orchestrates,
-plans fix blocks and reviews. The user may swap Haiku for Sonnet for testers or fixers (e.g. on subtle or large areas);
+plans fix blocks and reviews. The model names used in the steps below are this shorthand, not requirements — pick the cheapest available model with the needed capability. The user may swap Haiku for Sonnet for testers or fixers (e.g. on subtle or large areas);
 reviewers stay a tier above the agents they review.
 
 ## Examples
